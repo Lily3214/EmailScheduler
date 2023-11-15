@@ -13,6 +13,7 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("com.sun.mail:javax.mail:1.6.2")
+    implementation("org.apache.commons:commons-csv:1.10.0")
 }
 
 tasks.test {

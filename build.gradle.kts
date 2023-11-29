@@ -14,6 +14,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("com.sun.mail:javax.mail:1.6.2")
     implementation("org.apache.commons:commons-csv:1.10.0")
+    implementation ("com.opencsv:opencsv:5.5")
 }
 
 tasks.test {

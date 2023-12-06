@@ -18,8 +18,8 @@ public class WeddingAnniversaryEmailSender {
 
     // SMTP server properties
     private static final String CSV_FILE_PATH = "familyMembers.csv";
-    private static final String FROM_EMAIL = "yue4509@gmail.com";
-    private static final String PASSWORD = "ajsp ueie jupr xemh";
+    private static final String FROM_EMAIL = "yourEmail.com";
+    private static final String PASSWORD = "yourPassword";
     private static final String SMTP_HOST = "smtp.gmail.com";
     private static final String SMTP_PORT = "587";
 

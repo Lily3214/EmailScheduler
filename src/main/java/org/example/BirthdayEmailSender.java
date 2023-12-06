@@ -41,7 +41,7 @@ public class BirthdayEmailSender {
                     if (isTodayBirthday(dob)) {
                         try {
                             // Send birthday email to everyone in the CSV file
-                            sendBirthdayEmailToAll(name);
+                            sendBirthdayEmail(name, email);
                             System.out.println("Birthday email sent to everyone on " + name + "'s birthday");
                         } catch (MessagingException e) {
                             System.err.println("Error sending birthday email to everyone on " + name + "'s birthday: " + e.getMessage());
@@ -61,7 +61,7 @@ public class BirthdayEmailSender {
         return today.equals(birthday);
     }
 
-    private static void sendBirthdayEmailToAll(String name) throws MessagingException {
+    private static void sendBirthdayEmail(String name, String recipientEmail) throws MessagingException {
         // Setup mail server properties
         Properties properties = new Properties();
         properties.put("mail.smtp.auth", "true");
@@ -79,28 +79,10 @@ public class BirthdayEmailSender {
         Message message = new MimeMessage(session);
 
         message.setFrom(new InternetAddress(FROM_EMAIL));
+        message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipientEmail));
 
-        // Set the recipients' email addresses
-        // Read the CSV file again and get all the email addresses
-        try (CSVReader reader = new CSVReader(new FileReader(CSV_FILE_PATH))) {
-            String[] header = reader.readNext();
-            if (header != null && header.length == 11) {
-                String[] record;
-                String allEmails = "";
-                while ((record = reader.readNext()) != null) {
-                    String email = record[1];
-                    allEmails += email + ",";
-                }
-                allEmails = allEmails.substring(0, allEmails.length() - 1);
-
-                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(allEmails));
-            }
-        } catch (IOException | CsvValidationException e) {
-            System.err.println("Error reading CSV file: " + e.getMessage());
-        }
         message.setSubject("Happy Birthday!");
-
-        message.setText("Dear " + name +", Here is wishing you a very happy and blessed birthday. - St. Mary's Linden family.");
+        message.setText("Dear " + name + ",\nHere is wishing you a very happy and blessed birthday. - St. Mary's Linden family.");
 
         Transport.send(message);
     }

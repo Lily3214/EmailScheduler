@@ -29,18 +29,18 @@ public class MainClass {
         while (running) {
             System.out.println("\nWelcome to Birthday Printer App");
             System.out.println("Choose an option:");
-            System.out.println("A) Print following week from Sunday to Saturday birthday");
-            System.out.println("B) Print following week from Sunday to Saturday wedding anniversary");
+            System.out.println("A) Print previous week from Sunday to Saturday birthday");
+            System.out.println("B) Print previous week from Sunday to Saturday wedding anniversary");
             System.out.println("X) Exit");
 
             String input = scanner.nextLine().trim();
 
             switch (input.toUpperCase()) {
                 case "A":
-                    printFollowingWeekBirthdays();
+                    printPreviousWeekBirthdayLists();
                     break;
                 case "B":
-                    printFollowingWeekWeddingAnniversaries();
+                    printPreviousWeekWeekWeddingAnniversaries();
                     break;
                 case "X":
                     running = false;
@@ -111,18 +111,23 @@ public class MainClass {
         System.out.println("Error parsing line " + lineNumber + ": " + errorMessage);
     }
 
-    private static void printFollowingWeekBirthdays() {
-        // the date of the next Sunday from the current date
-        LocalDate nextSunday = LocalDate.now().plusDays(7 - LocalDate.now().getDayOfWeek().getValue());
-        // the date of the next Saturday from the next Saturday
-        LocalDate nextSaturday = nextSunday.plusDays(6);
+    private static void printPreviousWeekBirthdayLists() {
+        LocalDate currentDate = LocalDate.now();
+        // Calculate the date for the most recent Sunday
+        LocalDate previousSunday = currentDate.minusDays(currentDate.getDayOfWeek().getValue());
+
+        // Calculate the date for the previous Saturday
+        LocalDate previousSaturday = previousSunday.minusDays(1);
+
+        // Calculate the date for the previous Sunday
+        LocalDate startOfPreviousWeek = previousSunday.minusWeeks(1);
 
         List<FamilyMembersData> birthdayList = new ArrayList<>();
 
-        System.out.println("List of following week Birthday Lists");
+        System.out.println("List of previous week Birthday Lists");
         for (FamilyMembersData familyMember : familyMembersList) {
             LocalDate dob = familyMember.getDob();
-            if (isInNextWeek(dob, nextSunday, nextSaturday)) {
+            if (!dob.isBefore(startOfPreviousWeek) && !dob.isAfter(previousSaturday)) {
                 birthdayList.add(familyMember);
             }
         }
@@ -134,18 +139,23 @@ public class MainClass {
         }
     }
 
-    private static void printFollowingWeekWeddingAnniversaries() {
-        // the date of the next Sunday from the current date
-        LocalDate nextSunday = LocalDate.now().plusDays(7 - LocalDate.now().getDayOfWeek().getValue());
-        // the date of the next Saturday from the next Saturday
-        LocalDate nextSaturday = nextSunday.plusDays(6);
+    private static void printPreviousWeekWeekWeddingAnniversaries() {
+        LocalDate currentDate = LocalDate.now();
+        // Calculate the date for the most recent Sunday
+        LocalDate previousSunday = currentDate.minusDays(currentDate.getDayOfWeek().getValue());
+
+        // Calculate the date for the previous Saturday
+        LocalDate previousSaturday = previousSunday.minusDays(1);
+
+        // Calculate the date for the previous Sunday
+        LocalDate startOfPreviousWeek = previousSunday.minusWeeks(1);
 
         List<FamilyMembersData> anniversaryList = new ArrayList<>();
 
-        System.out.println("List of following week Wedding Anniversary");
+        System.out.println("List of previous week Wedding Anniversary");
         for (FamilyMembersData familyMember : familyMembersList) {
             LocalDate anniversary = familyMember.getWeddingAnniversary();
-            if (anniversary != null && isInNextWeek(anniversary, nextSunday, nextSaturday)) {
+            if (anniversary != null && !anniversary.isBefore(startOfPreviousWeek) && !anniversary.isAfter(previousSaturday)) {
                 anniversaryList.add(familyMember);
             }
         }

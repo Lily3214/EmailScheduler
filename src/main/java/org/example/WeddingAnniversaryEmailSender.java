@@ -18,8 +18,8 @@ public class WeddingAnniversaryEmailSender {
 
     // SMTP server properties
     private static final String CSV_FILE_PATH = "familyMembers.csv";
-    private static final String FROM_EMAIL = "yourEmail@gmail.com";
-    private static final String PASSWORD = "yourPassword";
+    private static final String FROM_EMAIL = "yue4509@gmail.com";
+    private static final String PASSWORD = "ajsp ueie jupr xemh";
     private static final String SMTP_HOST = "smtp.gmail.com";
     private static final String SMTP_PORT = "587";
 
@@ -41,7 +41,7 @@ public class WeddingAnniversaryEmailSender {
                     if (isTodayAnniversary(anniversary)) {
                         try {
                             // Send anniversary email to everyone in the CSV file
-                            sendAnniversaryEmailToAll(name);
+                            sendAnniversaryEmail(name, email);
                             System.out.println("Anniversary email sent to everyone on " + name + "'s anniversary");
                         } catch (MessagingException e) {
                             System.err.println("Error sending anniversary email to everyone on " + name + "'s anniversary: " + e.getMessage());
@@ -61,7 +61,7 @@ public class WeddingAnniversaryEmailSender {
         return today.equals(anniversaryDay);
     }
 
-    private static void sendAnniversaryEmailToAll(String name) throws MessagingException {
+    private static void sendAnniversaryEmail(String name, String recipientEmail) throws MessagingException {
         // Setup mail server properties
         Properties properties = new Properties();
         properties.put("mail.smtp.auth", "true");
@@ -79,29 +79,10 @@ public class WeddingAnniversaryEmailSender {
         Message message = new MimeMessage(session);
 
         message.setFrom(new InternetAddress(FROM_EMAIL));
+        message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipientEmail));
 
-        // Set the recipients' email addresses
-        // Read the CSV file again and get all the email addresses
-        try (CSVReader reader = new CSVReader(new FileReader(CSV_FILE_PATH))) {
-            String[] header = reader.readNext();
-            if (header != null && header.length == 11) {
-                String[] record;
-                String allEmails = "";
-                while ((record = reader.readNext()) != null) {
-                    String email = record[1];
-                    allEmails += email + ",";
-                }
-                // Remove the last comma from the string
-                allEmails = allEmails.substring(0, allEmails.length() - 1);
-
-                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(allEmails));
-            }
-        } catch (IOException | CsvValidationException e) {
-            System.err.println("Error reading CSV file: " + e.getMessage());
-        }
         message.setSubject("Happy Anniversary!");
-
-        message.setText("Dear " + name +", Here is wishing you both a happy anniversary and a blessed year ahead. - St. Mary's Linden family.");
+        message.setText("Dear " + name + ",\nHere is wishing you a very happy and blessed Wedding Anniversary. - St. Mary's Linden family.");
 
         Transport.send(message);
     }
